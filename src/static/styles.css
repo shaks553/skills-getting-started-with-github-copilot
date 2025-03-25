@@ -80,6 +80,10 @@ section h3 {
   list-style-type: disc;
 }
 
+.participant-count {
+  color: red;
+}
+
 .form-group {
   margin-bottom: 15px;
 }

@@ -74,6 +74,12 @@ section h3 {
   margin-bottom: 8px;
 }
 
+.activity-card ul {
+  margin-top: 10px;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
 .form-group {
   margin-bottom: 15px;
 }

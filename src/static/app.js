@@ -4,6 +4,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
 
+  // Function to fetch participants for an activity
+  async function fetchParticipants(activityName) {
+    try {
+      const response = await fetch(`/activities/${encodeURIComponent(activityName)}/participants`);
+      const participants = await response.json();
+      return participants;
+    } catch (error) {
+      console.error(`Error fetching participants for ${activityName}:`, error);
+      return [];
+    }
+  }
+
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
@@ -14,17 +26,20 @@ document.addEventListener("DOMContentLoaded", () => {
       activitiesList.innerHTML = "";
 
       // Populate activities list
-      Object.entries(activities).forEach(([name, details]) => {
+      for (const [name, details] of Object.entries(activities)) {
         const activityCard = document.createElement("div");
         activityCard.className = "activity-card";
 
         const spotsLeft = details.max_participants - details.participants.length;
+
+        const participants = await fetchParticipants(name);
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <p><strong>Participants:</strong> ${participants.join(", ")}</p>
         `;
 
         activitiesList.appendChild(activityCard);
@@ -34,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         option.value = name;
         option.textContent = name;
         activitySelect.appendChild(option);
-      });
+      }
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
       console.error("Error fetching activities:", error);
